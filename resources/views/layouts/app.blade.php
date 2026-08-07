@@ -43,7 +43,7 @@
             </header>
 
             @if (session('success'))
-                <div class="flash" g-scope="{ visible: true }" g-show="visible" g-transition>
+                <div class="flash" g-scope="{ visible: true }" g-show="visible">
                     <strong>{{ session('success') }}</strong>
                     <button type="button" @click="visible = false" aria-label="Dismiss notification">×</button>
                 </div>
@@ -56,7 +56,7 @@
     <div id="modal-shell"></div>
 
     <section class="scratchpad" g-persist="ops-scratchpad" g-scope="Scratchpad">
-        <div class="scratchpad-panel" *if="open" g-transition>
+        <div class="scratchpad-panel" *if="open" g-transition="fade">
             <div class="scratchpad-head"><strong>Ops scratchpad</strong><span>{elapsed}</span></div>
             <textarea g-model="note" placeholder="Type a note, then navigate. This exact DOM island survives."></textarea>
             <div class="scratchpad-foot">{note.length} characters · persisted DOM</div>
