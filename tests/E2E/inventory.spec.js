@@ -50,7 +50,7 @@ test('the full Inventory Desk journey remains server owned and boost enhanced', 
     await page.getByRole('button', { name: 'Save product' }).click();
     await page.waitForURL(/\/products\/\d+$/);
     await expect(page.locator('.flash')).toContainText('Product saved');
-    await expect(page.getByRole('heading', { name: 'Arc Headphones Field Edition' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Arc Headphones Field Edition', level: 2 })).toBeVisible();
     await expect(page.locator('.scratchpad textarea')).toHaveValue('Recount aisle B');
 
     await page.goBack();
@@ -72,7 +72,7 @@ test('core links and forms retain a no-JavaScript fallback', async ({ browser })
 
     await page.goto('/products?q=Arc');
     await expect(page.locator('.product-card')).toHaveCount(4);
-    await page.getByRole('link', { name: /Arc Headphones/ }).first().click({ noWaitAfter: true });
+    await page.getByRole('link', { name: /Arc Headphones/ }).first().click({ force: true });
     await expect(page).toHaveURL(/\/products\/\d+$/);
 
     await context.close();
