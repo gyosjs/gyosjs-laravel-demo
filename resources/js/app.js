@@ -1,6 +1,6 @@
 import Gyos from 'gyosjs/auto';
 
-Gyos.scope('ProductForm', {
+Gyos.scope('ProductForm', () => ({
     step: 1,
     maxStep: 3,
     name: '',
@@ -21,7 +21,7 @@ Gyos.scope('ProductForm', {
     goTo(step) {
         this.step = Math.max(1, Math.min(this.maxStep, step));
     },
-});
+}));
 
 Gyos.scope('Scratchpad', {
     open: false,

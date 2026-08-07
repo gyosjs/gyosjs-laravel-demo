@@ -8,12 +8,14 @@
     @if ($products->hasMorePages())
         <a
             class="button dark load-more"
-            href="{{ route('products.load-more', array_merge(request()->query(), ['page' => $products->currentPage() + 1])) }}"
+            href="{{ route('products.index', array_merge(request()->query(), ['page' => $products->currentPage() + 1])) }}"
+            g-router-link="{{ route('products.load-more', array_merge(request()->query(), ['page' => $products->currentPage() + 1])) }}"
+            g-router-method="GET"
             g-target="#product-grid"
             g-swap="append"
             g-noscroll
             g-router-spin
-            @click="$event.currentTarget.remove()"
+            g-router-remove
         >Load 12 more</a>
     @endif
 </div>
