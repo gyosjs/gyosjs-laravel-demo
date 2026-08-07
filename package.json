@@ -1,0 +1,23 @@
+{
+    "$schema": "https://www.schemastore.org/package.json",
+    "name": "gyosjs-laravel-demo",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "build": "vite build",
+        "capture:screenshot": "node scripts/capture-demo.mjs",
+        "dev": "vite",
+        "test:e2e": "playwright test"
+    },
+    "devDependencies": {
+        "@playwright/test": "1.55.1",
+        "@tailwindcss/vite": "^4.0.0",
+        "concurrently": "^9.0.1",
+        "laravel-vite-plugin": "1.3.0",
+        "tailwindcss": "^4.0.0",
+        "vite": "6.4.3"
+    },
+    "dependencies": {
+        "gyosjs": "^0.1.1"
+    }
+}
