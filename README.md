@@ -56,7 +56,7 @@ The feature suite verifies workspace isolation, scoped records, filters, fragmen
 To test an already running deployment:
 
 ```bash
-PLAYWRIGHT_BASE_URL=https://demo.gyosjs.dev npm run test:e2e
+PLAYWRIGHT_BASE_URL=https://demo-inventory.gyosjs.dev npm run test:e2e
 ```
 
 ## GyosJS Integration
