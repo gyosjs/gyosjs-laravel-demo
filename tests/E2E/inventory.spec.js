@@ -51,6 +51,8 @@ test('the full Inventory Desk journey remains server owned and boost enhanced', 
     await page.waitForURL(/\/products\/\d+$/);
     await expect(page.locator('.flash')).toContainText('Product saved');
     await expect(page.getByRole('heading', { name: 'Arc Headphones Field Edition', level: 2 })).toBeVisible();
+    expect(await scratchpad.evaluate(node => node.isConnected)).toBe(true);
+    await page.getByRole('button', { name: 'Open ops notes' }).click();
     await expect(page.locator('.scratchpad textarea')).toHaveValue('Recount aisle B');
 
     await page.goBack();
