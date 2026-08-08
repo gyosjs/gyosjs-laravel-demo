@@ -3,6 +3,12 @@ name: Tests
 on:
   push:
   pull_request:
+  schedule:
+    - cron: '29 3 * * 2'
+  workflow_dispatch:
+  schedule:
+    - cron: '29 3 * * 2'
+  workflow_dispatch:
 
 jobs:
   application:

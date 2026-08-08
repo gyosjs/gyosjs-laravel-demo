@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: GyosJS runtime issues
+    url: https://github.com/gyosjs/gyosjs/issues/new/choose
+    about: Report a minimal runtime or MPA Boost regression in the core repository.
+  - name: GyosJS documentation
+    url: https://gyosjs.dev
+    about: Read the runtime and MPA Boost guides.

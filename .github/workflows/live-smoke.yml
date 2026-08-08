@@ -1,0 +1,35 @@
+name: Live Demo Smoke
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '53 2 * * *'
+
+permissions:
+  contents: read
+
+jobs:
+  journey:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Run read-only public journey
+        run: npm run test:e2e:live
+        env:
+          PLAYWRIGHT_BASE_URL: https://demo-inventory.gyosjs.dev
+      - name: Upload browser traces
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-demo-traces
+          path: test-results/
+          if-no-files-found: ignore
+          retention-days: 7

@@ -7,7 +7,8 @@
         "build": "vite build",
         "capture:screenshot": "node scripts/capture-demo.mjs",
         "dev": "vite",
-        "test:e2e": "playwright test"
+        "test:e2e": "playwright test --grep-invert @live",
+        "test:e2e:live": "playwright test tests/E2E/live.spec.js"
     },
     "devDependencies": {
         "@playwright/test": "1.55.1",
@@ -18,6 +19,6 @@
         "vite": "6.4.3"
     },
     "dependencies": {
-        "gyosjs": "^0.1.2"
+        "gyosjs": "0.1.2"
     }
 }

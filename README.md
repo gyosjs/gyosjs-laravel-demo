@@ -53,11 +53,13 @@ npm run test:e2e
 
 The feature suite verifies workspace isolation, scoped records, filters, fragments, validation, redirects, unique SKUs, and reset behavior. The Playwright journey verifies boosted navigation, modal and append swaps, persisted DOM identity, POST validation, redirects, history, and no-JavaScript fallback.
 
-To test an already running deployment:
+The production smoke is deliberately read-only. It covers GET filters, quick view, boosted create/edit route isolation, and load more without submitting a mutation:
 
 ```bash
-PLAYWRIGHT_BASE_URL=https://demo-inventory.gyosjs.dev npm run test:e2e
+PLAYWRIGHT_BASE_URL=https://demo-inventory.gyosjs.dev npm run test:e2e:live
 ```
+
+Keep `gyosjs` pinned to the exact verified release. Upgrade it intentionally after the core release, then run both local suites before deploying the demo.
 
 ## GyosJS Integration
 
