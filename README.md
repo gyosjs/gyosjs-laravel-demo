@@ -12,11 +12,13 @@ The application keeps routing, queries, validation, redirects, sessions, and HTM
 2. Search, filter, and sort with ordinary GET parameters.
 3. Open a server-rendered quick-view fragment in a modal.
 4. Append the next result page with `g-target` and `g-swap="append"`.
-5. Edit a product through a three-step reactive form.
-6. Submit a normal POST, render Laravel validation errors, then redirect after success.
-7. Move backward and forward through browser history.
-8. Keep the Ops Scratchpad DOM node and state alive with `g-persist`.
-9. Repeat the essential links and forms with JavaScript disabled.
+5. Count the lowest-stock products with a reactive bulk form and variance summary.
+6. Edit a product through a three-step reactive form.
+7. Submit normal POST requests, render Laravel validation errors, then redirect after success.
+8. Move backward and forward through browser history.
+9. Keep the Ops Scratchpad DOM node and state alive with `g-persist`.
+10. Run the same server-owned pages under strict CSP with a fresh nonce per response.
+11. Repeat the essential links and forms with JavaScript disabled.
 
 Each browser session gets an isolated workspace seeded with 36 products. Resetting the demo only resets the current session's data. `php artisan demo:prune` removes stale workspaces and is scheduled hourly.
 
@@ -37,6 +39,10 @@ php artisan serve
 
 Open `http://127.0.0.1:8000`. Use `npm run dev` instead of `npm run build` while editing frontend assets.
 
+The production build keeps the policy strict. Local Vite HMR is allowed to inject its own development styles, so the local policy
+temporarily includes the Vite origin and `unsafe-inline` for styles only. Do not copy that development exception into a production
+CSP.
+
 On Windows, create the SQLite file with PowerShell:
 
 ```powershell
@@ -51,25 +57,26 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-The feature suite verifies workspace isolation, scoped records, filters, fragments, validation, redirects, unique SKUs, and reset behavior. The Playwright journey verifies boosted navigation, modal and append swaps, persisted DOM identity, POST validation, redirects, history, and no-JavaScript fallback.
+The feature suite verifies workspace isolation, scoped records, filters, fragments, validation, redirects, unique SKUs, stocktake updates, and reset behavior. The Playwright journey verifies boosted navigation, modal and append swaps, persisted DOM identity, strict CSP nonce ownership, POST validation, redirects, history, delete cancellation, and no-JavaScript fallback.
 
-The production smoke is deliberately read-only. It covers GET filters, quick view, boosted create/edit route isolation, and load more without submitting a mutation:
+The production smoke is deliberately read-only. It covers GET filters, quick view, boosted create/edit route isolation, load more, and the strict CSP Stocktake page without submitting a mutation:
 
 ```bash
 PLAYWRIGHT_BASE_URL=https://demo-inventory.gyosjs.dev npm run test:e2e:live
 ```
 
-Keep `gyosjs` pinned to the exact verified release. Upgrade it intentionally after the core release, then run both local suites before deploying the demo.
+Keep `gyosjs` pinned to the exact verified release `0.3.1`. Upgrade it intentionally after the core release, then run both local suites before deploying the demo.
 
 ## GyosJS Integration
 
-The browser entry imports the auto-initializing package:
+The browser entry imports the strict CSP auto-initializing package:
 
 ```js
-import Gyos from 'gyosjs/auto';
+import Gyos from 'gyosjs/csp/auto';
+import 'gyosjs/styles.css';
 ```
 
-The main layout uses `g-boost`, `g-outlet`, and `g-snapshot`. Product forms use a named `ProductForm` scope and standard named inputs. Search, validation, and redirects deliberately remain server-owned. See the [GyosJS documentation](https://gyosjs.dev) for the API and lifecycle details.
+The main layout uses `g-boost`, `g-outlet`, `g-snapshot`, and a per-response CSP nonce. Product forms and Stocktake use named scopes, reactive bindings, and standard named inputs. Search, validation, bulk updates, and redirects deliberately remain server-owned. See the [GyosJS documentation](https://gyosjs.dev) for the API and lifecycle details.
 
 ## Public Demo Operations
 
