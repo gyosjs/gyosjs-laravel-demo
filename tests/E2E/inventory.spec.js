@@ -127,5 +127,65 @@ test('core links and forms retain a no-JavaScript fallback', async ({ browser })
     await page.getByRole('link', { name: /Arc Headphones/ }).first().click({ force: true });
     await expect(page).toHaveURL(/\/products\/\d+$/);
 
+    await page.goto('/stocktake');
+    await expect(page.locator('.stocktake-row')).toHaveCount(12);
+    await expect(page.locator('form.stocktake-card')).toHaveAttribute('action', /\/stocktake$/);
+    await expect(page.locator('input[name^="counts["]')).toHaveCount(12);
+
     await context.close();
+});
+
+test('delete confirmation can cancel a native server form', async ({ page }) => {
+    await page.goto('/products');
+    await page.getByRole('link', { name: /Arc Headphones/ }).first().click();
+    await expect(page).toHaveURL(/\/products\/\d+$/);
+
+    page.once('dialog', dialog => dialog.dismiss());
+    await page.getByRole('button', { name: 'Delete' }).click();
+    await expect(page).toHaveURL(/\/products\/\d+$/);
+    await expect(page.getByRole('button', { name: 'Delete' })).toBeVisible();
+});
+
+test('strict CSP stocktake keeps nonce ownership and submits reactively', async ({ page }) => {
+    const violations = [];
+    page.on('securitypolicyviolation', event => violations.push(event.effectiveDirective));
+    page.on('pageerror', error => violations.push(error.message));
+
+    const initialResponse = await page.goto('/stocktake');
+    const initialNonce = await page.locator('meta[name="csp-nonce"]').getAttribute('content');
+    const initialPolicy = initialResponse.headers()['content-security-policy'];
+
+    expect(initialPolicy).toContain("script-src 'self' 'nonce-");
+    expect(initialPolicy).not.toContain("'unsafe-eval'");
+    expect(initialPolicy).not.toContain("'unsafe-inline'");
+    expect(initialNonce).toBeTruthy();
+    await expect(page.locator('[g-reveal]').first()).toHaveAttribute('data-gyos-revealed', '');
+
+    const firstInput = page.locator('.stocktake-row').first().locator('input');
+    const secondInput = page.locator('.stocktake-row').nth(1).locator('input');
+    const currentStock = Number(await firstInput.inputValue());
+    await firstInput.fill(String(currentStock + 4));
+    await expect(page.locator('.stocktake-row.is-changed')).toHaveCount(1);
+    await expect(page.locator('.stocktake-summary')).toBeVisible();
+
+    await secondInput.fill('');
+    await page.getByRole('button', { name: 'Save stocktake' }).first().click();
+    await expect(page.locator('.stocktake-row').nth(1).locator('.field-error')).toContainText('required');
+    await expect(page).toHaveURL(/\/stocktake$/);
+
+    await secondInput.fill(String(await secondInput.getAttribute('value')));
+    const submitResponse = page.waitForResponse(response => response.url().endsWith('/stocktake') && response.request().method() === 'POST');
+    await page.getByRole('button', { name: 'Save stocktake' }).first().click();
+    await submitResponse;
+    await expect(page).toHaveURL(/\/stocktake$/);
+    await expect(page.locator('.flash')).toContainText('Stocktake saved');
+
+    const navigation = page.waitForResponse(response => response.url().endsWith('/products') && response.request().method() === 'GET');
+    await page.getByRole('link', { name: 'Products' }).click();
+    const response = await navigation;
+    const fetchedPolicy = response.headers()['content-security-policy'];
+    expect(fetchedPolicy).toContain("'nonce-");
+    expect(fetchedPolicy).not.toContain(initialNonce);
+    await expect(page.locator('meta[name="csp-nonce"]')).toHaveAttribute('content', initialNonce);
+    expect(violations).toEqual([]);
 });

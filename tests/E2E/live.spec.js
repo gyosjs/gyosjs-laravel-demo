@@ -48,3 +48,12 @@ test('public Inventory Desk keeps its read-only GyosJS journey healthy @live', a
     await expect(page.getByRole('link', { name: 'Load 12 more' })).toHaveCount(1);
     expect(errors).toEqual([]);
 });
+
+test('public Inventory Desk serves the strict CSP stocktake page @live', async ({ page }) => {
+    const response = await page.goto('/stocktake');
+
+    expect(response.headers()['content-security-policy']).toContain("script-src 'self' 'nonce-");
+    await expect(page.getByRole('heading', { name: 'Count what needs attention.' })).toBeVisible();
+    await expect(page.locator('.stocktake-row')).toHaveCount(12);
+    await expect(page.locator('meta[name="csp-nonce"]')).toHaveAttribute('content', /.+/);
+});

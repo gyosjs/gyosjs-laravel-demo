@@ -116,3 +116,51 @@ test('reset restores exactly the original dataset', function () {
 
     expect(Product::where('workspace_id', $workspaceId)->count())->toBe(36);
 });
+
+test('stocktake renders the lowest stock products and commits a bulk update', function () {
+    $response = $this->get('/stocktake');
+
+    $response->assertOk()
+        ->assertSee('Count what needs attention.')
+        ->assertSee('g-form="stocktakeForm"', false);
+
+    $workspaceId = session('demo_workspace_id');
+    $products = Product::where('workspace_id', $workspaceId)
+        ->orderBy('stock')
+        ->orderBy('name')
+        ->limit(12)
+        ->get();
+    $target = $products->firstOrFail();
+    $newStock = $target->stock + 7;
+    $counts = $products->mapWithKeys(fn (Product $product) => [$product->id => $product->id === $target->id ? $newStock : $product->stock])->all();
+
+    $this->post('/stocktake', ['counts' => $counts])
+        ->assertRedirect('/stocktake')
+        ->assertSessionHas('success');
+
+    expect($target->fresh()->stock)->toBe($newStock);
+});
+
+test('stocktake rejects a product outside the active workspace', function () {
+    $this->get('/products');
+    $foreignProduct = Product::where('workspace_id', '!=', session('demo_workspace_id'))->first();
+
+    if (! $foreignProduct) {
+        $foreignWorkspace = DemoWorkspace::create();
+        $foreignProduct = $foreignWorkspace->products()->create([
+            'sku' => 'FOREIGN-001',
+            'name' => 'Foreign product',
+            'category' => 'Desk',
+            'status' => 'active',
+            'price' => 10,
+            'stock' => 1,
+        ]);
+    }
+
+    $response = $this->from('/stocktake')->post('/stocktake', ['counts' => [$foreignProduct->id => 4]]);
+
+    expect($response->getStatusCode())->toBe(302)
+        ->and($response->headers->get('Location'))->toEndWith('/stocktake');
+
+    $this->get('/stocktake')->assertSee('The server rejected this stocktake.');
+});
