@@ -1,5 +1,5 @@
 <div id="modal-shell">
-    <div class="modal-overlay" g-scope="{ open: true }" g-show="open" g-transition>
+    <div class="modal-overlay" g-scope="{ open: true }" g-show="open" g-transition="fade">
         <article class="modal" @click.outside="open = false">
             <header class="modal-head"><span class="eyebrow">Server-rendered fragment</span><button class="icon-button" type="button" @click="open = false" aria-label="Close modal">×</button></header>
             <div class="modal-body">

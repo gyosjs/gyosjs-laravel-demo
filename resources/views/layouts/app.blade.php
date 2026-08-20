@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="csp-nonce" content="{{ $cspNonce }}">
     <meta name="description" content="Inventory Desk is a real Laravel journey built to exercise GyosJS reactive HTML and MPA Boost.">
     <title>{{ $title }} · Inventory Desk</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -28,9 +29,12 @@
                 <a class="nav-link {{ request()->routeIs('products.create') ? 'active' : '' }}" href="{{ route('products.create') }}">
                     <span class="nav-index">03</span> Add product
                 </a>
+                <a class="nav-link {{ request()->routeIs('stocktake.*') ? 'active' : '' }}" href="{{ route('stocktake.index') }}">
+                    <span class="nav-index">04</span> Stocktake
+                </a>
             </nav>
 
-            <form class="reset-form" method="post" action="{{ route('demo.reset') }}">
+            <form class="reset-form" method="post" action="{{ route('demo.reset') }}" g-scope="ConfirmAction" gd-message="Reset all products in your demo workspace?" @submit="confirm($event)">
                 @csrf
                 <button class="reset-button" type="submit">Reset my demo data</button>
             </form>
@@ -39,11 +43,11 @@
         <section class="page">
             <header class="topbar">
                 <div><span class="eyebrow">Operations / {{ now()->format('Y.m.d') }}</span><h1>{{ $title }}</h1></div>
-                <div class="topbar-status"><span class="status-dot"></span> Session workspace isolated</div>
+                <div class="topbar-status"><span class="status-dot"></span> GyosJS 0.3.1 / strict CSP</div>
             </header>
 
             @if (session('success'))
-                <div class="flash" g-scope="{ visible: true }" g-show="visible">
+                <div class="flash" g-scope="{ visible: true }" g-show="visible" g-transition="slide-down">
                     <strong>{{ session('success') }}</strong>
                     <button type="button" @click="visible = false" aria-label="Dismiss notification">×</button>
                 </div>

@@ -13,7 +13,7 @@
             <div class="detail-actions">
                 <a class="button primary" href="{{ route('products.edit', $product) }}">Edit this product</a>
                 <a class="button" href="{{ route('products.index') }}">Back to catalog</a>
-                <form method="post" action="{{ route('products.destroy', $product) }}" onsubmit="return confirm('Remove this product from your demo workspace?')">@csrf @method('delete')<button class="button danger" type="submit">Delete</button></form>
+                <form method="post" action="{{ route('products.destroy', $product) }}" g-scope="ConfirmAction" gd-message="Remove this product from your demo workspace?" @submit="confirm($event)">@csrf @method('delete')<button class="button danger" type="submit">Delete</button></form>
             </div>
         </section>
     </div>

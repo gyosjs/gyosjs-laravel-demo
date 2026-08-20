@@ -1,4 +1,5 @@
-import Gyos from 'gyosjs/auto';
+import Gyos from 'gyosjs/csp/auto';
+import 'gyosjs/styles.css';
 
 Gyos.scope('ProductForm', () => ({
     step: 1,
@@ -20,6 +21,36 @@ Gyos.scope('ProductForm', () => ({
     },
     goTo(step) {
         this.step = Math.max(1, Math.min(this.maxStep, step));
+    },
+    formatPrice() {
+        return Number(this.price || 0).toFixed(2);
+    },
+}));
+
+Gyos.scope('ConfirmAction', () => ({
+    message: 'Continue?',
+    confirm(event) {
+        if (!window.confirm(this.message)) event.preventDefault();
+    },
+}));
+
+Gyos.scope('Stocktake', () => ({
+    expected: {},
+    counts: {},
+    get changedCount() {
+        return Object.keys(this.expected).filter(id => this.isChanged(id)).length;
+    },
+    get totalVariance() {
+        return Object.keys(this.expected).reduce((total, id) => total + this.variance(id), 0);
+    },
+    variance(id) {
+        return Number(this.counts[id] ?? 0) - Number(this.expected[id] ?? 0);
+    },
+    isChanged(id) {
+        return this.variance(id) !== 0;
+    },
+    hasError(id) {
+        return Boolean(this.stocktakeForm?.errors?.()[`counts[${id}]`]);
     },
 }));
 

@@ -3,14 +3,15 @@
 @section('content')
     <section class="section-head">
         <div><span class="eyebrow">Live server inventory</span><h2>A small app under real pressure.</h2></div>
+        <a class="button primary" href="{{ route('stocktake.index') }}">Open stocktake →</a>
         <p>Every number comes from Laravel. GyosJS keeps navigation, scopes, fragments, and persisted UI moving around that server-owned HTML.</p>
     </section>
 
     <div class="metric-grid">
-        <article class="metric-card" data-index="01"><span class="label">Catalog entries</span><span class="metric-value">{{ $metrics['total'] }}</span></article>
-        <article class="metric-card" data-index="02"><span class="label">Active products</span><span class="metric-value">{{ $metrics['active'] }}</span></article>
-        <article class="metric-card" data-index="03"><span class="label">Low stock</span><span class="metric-value">{{ $metrics['lowStock'] }}</span></article>
-        <article class="metric-card" data-index="04"><span class="label">Inventory value</span><span class="metric-value">${{ number_format($metrics['inventoryValue'], 0) }}</span></article>
+        <article class="metric-card" g-reveal data-index="01"><span class="label">Catalog entries</span><span class="metric-value">{{ $metrics['total'] }}</span></article>
+        <article class="metric-card" g-reveal data-index="02"><span class="label">Active products</span><span class="metric-value">{{ $metrics['active'] }}</span></article>
+        <article class="metric-card" g-reveal data-index="03"><span class="label">Low stock</span><span class="metric-value">{{ $metrics['lowStock'] }}</span></article>
+        <article class="metric-card" g-reveal data-index="04"><span class="label">Inventory value</span><span class="metric-value">${{ number_format($metrics['inventoryValue'], 0) }}</span></article>
     </div>
 
     <section class="panel">

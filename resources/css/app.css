@@ -56,6 +56,12 @@ body {
 
 [g-cloak] { display: none !important; }
 
+html.gyos-reveal-ready [g-reveal] { opacity: 0; transform: translateY(18px); transition: opacity .5s ease, transform .5s ease; }
+html.gyos-reveal-ready [g-reveal][data-gyos-revealed] { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+    html.gyos-reveal-ready [g-reveal] { opacity: 1; transform: none; transition: none; }
+}
+
 a { color: inherit; text-decoration: none; }
 
 button, input, select, textarea { font: inherit; }
@@ -174,6 +180,26 @@ button, input, select, textarea { font: inherit; }
 .form-actions { display: flex; justify-content: space-between; gap: 10px; margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--line); }
 .error-summary { border: 1px solid var(--danger); background: #f5dfd8; padding: 14px 18px; margin-bottom: 22px; }
 .error-summary strong { display: block; margin-bottom: 4px; }
+.form-review { padding: 12px; }
+
+.stocktake-card { border: 1px solid var(--ink); background: var(--paper-bright); box-shadow: var(--shadow); }
+.stocktake-toolbar, .stocktake-footer { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 18px 22px; }
+.stocktake-toolbar { border-bottom: 1px solid var(--ink); }
+.stocktake-toolbar strong { display: block; font-size: 18px; }
+.stocktake-summary { display: flex; align-items: center; gap: 14px; color: var(--muted); }
+.stocktake-list { display: grid; }
+.stocktake-row { display: grid; grid-template-columns: 68px minmax(180px, 1fr) 180px 100px; gap: 18px; align-items: center; padding: 14px 22px; border-bottom: 1px solid var(--line); transition: background .18s ease; }
+.stocktake-row.is-changed { background: #fff8d8; }
+.stocktake-row.is-positive .stocktake-variance strong { color: var(--success); }
+.stocktake-row.is-negative .stocktake-variance strong { color: var(--danger); }
+.stocktake-row .product-art { width: 68px; }
+.stocktake-product { display: grid; gap: 5px; }
+.stocktake-number { display: grid; gap: 5px; }
+.stocktake-number label { font-family: ui-monospace, monospace; text-transform: uppercase; letter-spacing: .08em; font-size: 10px; font-weight: 700; }
+.stocktake-number .input { min-height: 38px; }
+.stocktake-variance { display: grid; gap: 5px; text-align: right; }
+.stocktake-variance strong { font-size: 24px; }
+.stocktake-footer { border-top: 1px solid var(--line); }
 
 .modal-overlay { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 20px; background: rgba(23,23,19,.72); backdrop-filter: blur(4px); }
 .modal { width: min(680px, 100%); border: 1px solid var(--ink); background: var(--paper-bright); box-shadow: 12px 12px 0 rgba(0,0,0,.35); }
@@ -213,4 +239,10 @@ button, input, select, textarea { font: inherit; }
     .product-row > :nth-child(3), .product-row > :nth-child(4), .product-row > :nth-child(5) { display: none; }
     .form-grid .wide { grid-column: auto; }
     .step span { display: none; }
+    .stocktake-toolbar, .stocktake-footer { align-items: stretch; flex-direction: column; }
+    .stocktake-row { grid-template-columns: 52px 1fr; gap: 10px 14px; }
+    .stocktake-row .product-art { width: 52px; }
+    .stocktake-product { grid-column: 2; }
+    .stocktake-number { grid-column: 1 / -1; }
+    .stocktake-variance { grid-column: 1 / -1; display: flex; justify-content: space-between; text-align: left; }
 }

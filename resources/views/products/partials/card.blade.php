@@ -1,4 +1,4 @@
-<article class="product-card" data-product-id="{{ $product->id }}">
+<article class="product-card" g-reveal data-product-id="{{ $product->id }}">
     <a class="product-art tone-{{ $product->image_tone }}" href="{{ route('products.show', $product) }}" aria-label="Open {{ $product->name }}"></a>
     <div class="product-card-body">
         <div class="product-card-meta"><span>{{ $product->category }}</span><span>{{ $product->stock }} in stock</span></div>

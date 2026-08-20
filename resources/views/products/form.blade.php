@@ -54,7 +54,7 @@
         <section g-show="step === 3" g-cloak>
             <div class="form-grid">
                 <div class="field"><label for="stock">Units in stock</label><input class="input" id="stock" name="stock" type="number" value="{{ old('stock', $product->stock) }}" g-model.number="stock" required>@error('stock')<span class="field-error">{{ $message }}</span>@enderror</div>
-                <div class="field"><label>Reactive review</label><div class="panel" style="padding:12px"><strong>{name || 'Untitled product'}</strong><br><span class="meta">{category || 'No category'} · ${Number(price || 0).toFixed(2)} · {stock || 0} units</span><p>Laravel validates, updates the database, then redirects to the canonical detail URL.</p></div></div>
+                <div class="field"><label>Reactive review</label><div class="panel form-review"><strong>{name || 'Untitled product'}</strong><br><span class="meta">{category || 'No category'} · ${formatPrice()} · {stock || 0} units</span><p>Laravel validates, updates the database, then redirects to the canonical detail URL.</p></div></div>
             </div>
         </section>
 
