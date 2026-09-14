@@ -5,6 +5,7 @@ test('the full Inventory Desk journey remains server owned and boost enhanced', 
     page.on('pageerror', error => errors.push(error.message));
 
     await page.goto('/products');
+    expect(await page.evaluate(() => window.Gyos?.version)).toBe('0.4.0');
     await expect(page.locator('.product-card')).toHaveCount(12);
     await page.evaluate(() => { window.__inventoryDeskDocument = 'same-document'; });
 
@@ -155,6 +156,19 @@ test('strict CSP stocktake keeps nonce ownership and submits reactively', async 
     const initialNonce = await page.locator('meta[name="csp-nonce"]').getAttribute('content');
     const initialPolicy = initialResponse.headers()['content-security-policy'];
 
+    await page.evaluate(() => {
+        window.__stocktakeFormEvents = [];
+        for (const name of ['gyos:form-start', 'gyos:form-end']) {
+            document.addEventListener(name, event => {
+                window.__stocktakeFormEvents.push({
+                    name,
+                    outcome: event.detail.outcome,
+                    committed: event.detail.committed,
+                });
+            });
+        }
+    });
+
     expect(initialPolicy).toContain("script-src 'self' 'nonce-");
     expect(initialPolicy).not.toContain("'unsafe-eval'");
     expect(initialPolicy).not.toContain("'unsafe-inline'");
@@ -172,6 +186,7 @@ test('strict CSP stocktake keeps nonce ownership and submits reactively', async 
     await page.getByRole('button', { name: 'Save stocktake' }).first().click();
     await expect(page.locator('.stocktake-row').nth(1).locator('.field-error')).toContainText('required');
     await expect(page).toHaveURL(/\/stocktake$/);
+    expect(await page.evaluate(() => window.__stocktakeFormEvents)).toEqual([]);
 
     await secondInput.fill(String(await secondInput.getAttribute('value')));
     const submitResponse = page.waitForResponse(response => response.url().endsWith('/stocktake') && response.request().method() === 'POST');
@@ -179,6 +194,10 @@ test('strict CSP stocktake keeps nonce ownership and submits reactively', async 
     await submitResponse;
     await expect(page).toHaveURL(/\/stocktake$/);
     await expect(page.locator('.flash')).toContainText('Stocktake saved');
+    expect(await page.evaluate(() => window.__stocktakeFormEvents)).toEqual([
+        { name: 'gyos:form-start', outcome: null, committed: false },
+        { name: 'gyos:form-end', outcome: 'success', committed: true },
+    ]);
 
     const navigation = page.waitForResponse(response => response.url().endsWith('/products') && response.request().method() === 'GET');
     await page.getByRole('link', { name: 'Products' }).click();
