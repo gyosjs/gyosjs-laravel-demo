@@ -9,7 +9,8 @@ on:
 
 jobs:
   application:
-    runs-on: ubuntu-latest
+    # Playwright 1.55.1 supports Ubuntu 24.04, not the rolling latest image.
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
 
     steps:
