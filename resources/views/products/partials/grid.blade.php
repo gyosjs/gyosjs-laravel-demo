@@ -1,4 +1,4 @@
-<div id="product-grid" class="product-grid">
+<div id="product-grid" class="product-grid" g-scope="{}">
     @forelse ($products as $product)
         @include('products.partials.card', ['product' => $product])
     @empty

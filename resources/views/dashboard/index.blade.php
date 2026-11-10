@@ -7,7 +7,7 @@
         <p>Every number comes from Laravel. GyosJS keeps navigation, scopes, fragments, and persisted UI moving around that server-owned HTML.</p>
     </section>
 
-    <div class="metric-grid">
+    <div class="metric-grid" g-scope="{}">
         <article class="metric-card" g-reveal data-index="01"><span class="label">Catalog entries</span><span class="metric-value">{{ $metrics['total'] }}</span></article>
         <article class="metric-card" g-reveal data-index="02"><span class="label">Active products</span><span class="metric-value">{{ $metrics['active'] }}</span></article>
         <article class="metric-card" g-reveal data-index="03"><span class="label">Low stock</span><span class="metric-value">{{ $metrics['lowStock'] }}</span></article>

@@ -57,4 +57,12 @@ test('public Inventory Desk serves the strict CSP stocktake page @live', async (
     await expect(page.getByRole('heading', { name: 'Count what needs attention.' })).toBeVisible();
     await expect(page.locator('.stocktake-row')).toHaveCount(12);
     await expect(page.locator('meta[name="csp-nonce"]')).toHaveAttribute('content', /.+/);
+
+    await expect(page.locator('.stocktake-row').first()).toHaveAttribute('data-gyos-revealed', '');
+    await page.locator('nav a[href$="/products"]').click();
+    await expect(page).toHaveURL(/\/products$/);
+    const card = page.locator('.product-card').first();
+    await card.scrollIntoViewIfNeeded();
+    await expect(card).toHaveAttribute('data-gyos-revealed', '');
+    await expect(card).toHaveCSS('opacity', '1');
 });

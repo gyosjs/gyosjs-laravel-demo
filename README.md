@@ -71,6 +71,8 @@ Keep `gyosjs` pinned to the exact verified release `0.4.1`. Upgrade it intention
 
 The browser entry imports the strict CSP auto-initializing package:
 
+The product and metric grids use an empty `g-scope="{}"` so their `g-reveal` directives mount, including cards appended by Load more. Keep reveal markup inside a mounted scope: the document-wide `gyos-reveal-ready` CSS class can otherwise hide unmounted cards after navigating from Stocktake. Browser regressions check reveal attributes and computed opacity because an opacity-zero element still passes Playwright's visibility check.
+
 ```js
 import Gyos from 'gyosjs/csp/auto';
 import 'gyosjs/styles.css';
