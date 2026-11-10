@@ -42,6 +42,10 @@ test('overview metrics reveal on initial load, boosted visits and snapshot histo
     await expectRevealed(page.locator('.metric-card').first());
     await page.goBack();
     await expect(page).toHaveURL(/\/stocktake$/);
+    // popstate changes the URL before the asynchronous outlet swap finishes.
+    // Wait for the restored page before issuing the next history navigation.
+    await expectRevealed(page.locator('.stocktake-row').first());
     await page.goForward();
+    await expect(page).not.toHaveURL(/\/stocktake$/);
     await expectRevealed(page.locator('.metric-card').first());
 });
