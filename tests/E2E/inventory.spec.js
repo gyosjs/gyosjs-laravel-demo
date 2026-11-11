@@ -5,7 +5,7 @@ test('the full Inventory Desk journey remains server owned and boost enhanced', 
     page.on('pageerror', error => errors.push(error.message));
 
     await page.goto('/products');
-    expect(await page.evaluate(() => window.Gyos?.version)).toBe('0.5.0');
+    expect(await page.evaluate(() => window.Gyos?.version)).toBe('0.5.1');
     await expect(page.locator('.product-card')).toHaveCount(12);
     await page.evaluate(() => { window.__inventoryDeskDocument = 'same-document'; });
 
@@ -137,7 +137,7 @@ test('core links and forms retain a no-JavaScript fallback', async ({ browser })
 });
 
 test('delete confirmation can cancel a native server form', async ({ page }) => {
-    await page.goto('/products');
+    await page.goto('/products?q=Arc');
     await page.getByRole('link', { name: /Arc Headphones/ }).first().click();
     await expect(page).toHaveURL(/\/products\/\d+$/);
 
