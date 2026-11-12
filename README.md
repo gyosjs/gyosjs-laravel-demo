@@ -65,7 +65,7 @@ The production smoke is deliberately read-only. It covers GET filters, quick vie
 PLAYWRIGHT_BASE_URL=https://demo-inventory.gyosjs.dev npm run test:e2e:live
 ```
 
-Keep `gyosjs` pinned to the exact verified release `0.5.3`. Upgrade it intentionally after each core release, then run both local suites before deploying the demo.
+Keep `gyosjs` pinned to the exact verified release `0.5.4`. Upgrade it intentionally after each core release, then run both local suites before deploying the demo.
 
 ## GyosJS Integration
 

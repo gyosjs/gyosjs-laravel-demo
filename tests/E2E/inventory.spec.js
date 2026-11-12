@@ -5,7 +5,7 @@ test('the full Inventory Desk journey remains server owned and boost enhanced', 
     page.on('pageerror', error => errors.push(error.message));
 
     await page.goto('/products');
-    expect(await page.evaluate(() => window.Gyos?.version)).toBe('0.5.3');
+    expect(await page.evaluate(() => window.Gyos?.version)).toBe('0.5.4');
     await expect(page.locator('.product-card')).toHaveCount(12);
     await page.evaluate(() => { window.__inventoryDeskDocument = 'same-document'; });
 
