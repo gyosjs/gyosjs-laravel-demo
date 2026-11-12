@@ -43,7 +43,7 @@
         <section class="page">
             <header class="topbar">
                 <div><span class="eyebrow">Operations / {{ now()->format('Y.m.d') }}</span><h1>{{ $title }}</h1></div>
-                <div class="topbar-status"><span class="status-dot"></span> GyosJS 0.5.2 / strict CSP</div>
+                <div class="topbar-status"><span class="status-dot"></span> GyosJS 0.5.3 / strict CSP</div>
             </header>
 
             @if (session('success'))
