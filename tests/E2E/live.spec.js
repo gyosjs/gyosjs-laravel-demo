@@ -5,7 +5,7 @@ test('public Inventory Desk keeps its read-only GyosJS journey healthy @live', a
     page.on('pageerror', error => errors.push(error.message));
 
     await page.goto('/products');
-    expect(await page.evaluate(() => window.Gyos?.version)).toBe('0.5.4');
+    expect(await page.evaluate(() => window.Gyos?.version)).toBe('0.5.5');
     await expect(page.locator('.product-card')).toHaveCount(12);
     await page.evaluate(() => { window.__inventoryLiveDocument = 'same-document'; });
 
